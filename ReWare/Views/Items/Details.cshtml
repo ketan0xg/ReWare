@@ -1,0 +1,876 @@
+﻿@model ReWare.Models.Item
+
+@{
+    ViewBag.Title = Model.Title + " - ReWear";
+}
+
+<style>
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.3s;
+    }
+
+    /* Hero Section */
+    .item-hero {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 2rem 0;
+        margin: -2rem -15px 3rem -15px;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .item-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .breadcrumb-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .breadcrumb-link {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all var(--animation-duration) ease;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+    }
+
+        .breadcrumb-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+    .breadcrumb-separator {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .item-title-hero {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+    }
+
+    .item-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+
+    /* Main Content */
+    .item-details-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    /* Image Section */
+    .image-section {
+        position: relative;
+    }
+
+    .image-container {
+        position: relative;
+        border-radius: 25px;
+        overflow: hidden;
+        background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+        box-shadow: var(--shadow-xl);
+        aspect-ratio: 4/5;
+        transition: all 0.4s ease;
+    }
+
+        .image-container:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-glow);
+        }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .image-container:hover .item-image {
+        transform: scale(1.05);
+    }
+
+    .image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gradient-secondary);
+        color: white;
+        font-size: 4rem;
+    }
+
+    .image-badges {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .image-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .badge-status-approved {
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+    }
+
+    .badge-status-pending {
+        background: rgba(245, 158, 11, 0.9);
+        color: white;
+    }
+
+    .badge-available {
+        background: rgba(6, 214, 160, 0.9);
+        color: white;
+    }
+
+    .badge-unavailable {
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+    }
+
+    .wishlist-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--animation-duration) ease;
+        color: var(--text-secondary);
+        font-size: 1.5rem;
+    }
+
+        .wishlist-btn:hover {
+            background: var(--gradient-accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .wishlist-btn.active {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+    /* Details Section */
+    .details-section {
+        background: var(--white);
+        border-radius: 25px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .details-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-secondary);
+        }
+
+    .item-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .item-description {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--light);
+        border-radius: 15px;
+        border-left: 4px solid var(--accent);
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-item {
+        background: #F8FAFC;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all var(--animation-duration) ease;
+        border: 2px solid transparent;
+    }
+
+        .detail-item:hover {
+            background: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .detail-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    /* Points Section */
+    .points-section {
+        background: var(--gradient-warning);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+        .points-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+
+    .points-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .points-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .points-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .points-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .points-subtitle {
+        opacity: 0.9;
+        font-size: 1rem;
+    }
+
+    /* Action Buttons */
+    .action-section {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        flex: 1;
+        min-width: 200px;
+        padding: 1.25rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-action:hover::before {
+            left: 100%;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .btn-primary-action {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+    .btn-secondary-action {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 2px solid #E5E7EB;
+    }
+
+        .btn-secondary-action:hover {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            text-decoration: none;
+        }
+
+    .btn-disabled {
+        background: #E5E7EB;
+        color: #9CA3AF;
+        cursor: not-allowed;
+    }
+
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+    /* Alert Messages */
+    .alert-premium {
+        padding: 1.5rem 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #EBF8FF 0%, #DBEAFE 100%);
+        color: #1E40AF;
+        border-left: 4px solid #3B82F6;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+        color: #065F46;
+        border-left: 4px solid #10B981;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+        color: #92400E;
+        border-left: 4px solid #F59E0B;
+    }
+
+    .alert-icon {
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+
+    .alert-content {
+        flex: 1;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 968px) {
+        .item-details-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .item-hero {
+            padding: 1.5rem 0;
+            margin: -2rem -15px 2rem -15px;
+        }
+
+        .details-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .details-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-section {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            min-width: auto;
+        }
+
+        .image-container {
+            aspect-ratio: 4/3;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .breadcrumb-nav {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .item-title {
+            font-size: 2rem;
+        }
+    }
+
+    /* Loading Animation */
+    .fade-in {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Pulse Animation for New Items */
+    .pulse-glow {
+        animation: pulseGlow 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulseGlow {
+        0%, 100% {
+            box-shadow: var(--shadow-lg);
+        }
+
+        50% {
+            box-shadow: var(--shadow-glow);
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+
+<div class="container-fluid">
+    <!-- Alert Messages -->
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert-premium alert-info fade-in">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">@TempData["Message"]</div>
+        </div>
+    }
+
+    <!-- Main Content -->
+    <div class="item-details-container fade-in">
+        <!-- Image Section -->
+        <div class="image-section">
+            <div class="image-container pulse-glow">
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath" alt="@Model.Title" class="item-image" />
+                }
+                else
+                {
+                    <div class="image-placeholder">
+                        👕
+                    </div>
+                }
+
+                <!-- Image Badges -->
+                <div class="image-badges">
+                    @{
+                        string statusBadgeClass = "badge-status-pending";
+                        if (Model.ModerationStatus == "Approved")
+                        {
+                            statusBadgeClass = "badge-status-approved";
+                        }
+                    }
+                    <div class="image-badge @statusBadgeClass">
+                        @(Model.ModerationStatus ?? "Pending")
+                    </div>
+
+                    @{
+                        string availabilityBadgeClass = "badge-unavailable";
+                        if (Model.AvailabilityStatus == "Available")
+                        {
+                            availabilityBadgeClass = "badge-available";
+                        }
+                    }
+                    <div class="image-badge @availabilityBadgeClass">
+                        @(Model.AvailabilityStatus ?? "Unavailable")
+                    </div>
+                </div>
+
+                <!-- Wishlist Button -->
+                <div class="wishlist-btn" onclick="toggleWishlist(this)">
+                    ♡
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="details-section">
+            <h2 class="item-title">@Model.Title</h2>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="item-description">
+                    📝 @Model.Description
+                </div>
+            }
+
+            <!-- Details Grid -->
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon">📂</div>
+                    <div class="detail-label">Category</div>
+                    <div class="detail-value">@Model.Category</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">🏷️</div>
+                    <div class="detail-label">Type</div>
+                    <div class="detail-value">@Model.Type</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">📏</div>
+                    <div class="detail-label">Size</div>
+                    <div class="detail-value">@Model.Size</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">⭐</div>
+                    <div class="detail-label">Condition</div>
+                    <div class="detail-value">@Model.Condition</div>
+                </div>
+            </div>
+
+            <!-- Points Section -->
+            @if (Model.IsRedeemable)
+            {
+                <div class="points-section">
+                    <div class="points-content">
+                        <div class="points-icon">💎</div>
+                        <div class="points-title">Redeemable with Points</div>
+                        <div class="points-value">@(Model.PointsCost ?? 50)</div>
+                        <div class="points-subtitle">ReWear Points Required</div>
+                    </div>
+                </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+                @if (ViewBag.CanRequestSwap == true)
+                {
+                    using (Html.BeginForm("RequestSwap", "Items", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("id", Model.Id)
+                        <button type="submit" class="btn-action btn-primary-action">
+                            🔄 Request Swap
+                        </button>
+                    }
+                }
+                else
+                {
+                    <button class="btn-action btn-disabled" disabled>
+                        🔒 Swap Not Available
+                    </button>
+                }
+
+                <a href="@Url.Action("Index", "Items")" class="btn-action btn-secondary-action">
+                    ← Back to Browse
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div class="fade-in" style="margin-top: 3rem;">
+        <div class="details-section">
+            <h3 style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 50px; height: 50px; border-radius: 15px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                    ℹ️
+                </div>
+                Item Information
+            </h3>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon" style="background: var(--gradient-primary);">🏷️</div>
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">@(Model.ModerationStatus ?? "Under Review")</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon" style="background: var(--gradient-accent);">📋</div>
+                    <div class="detail-label">Availability</div>
+                    <div class="detail-value">@(Model.AvailabilityStatus ?? "Checking")</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon" style="background: var(--gradient-warning);">💰</div>
+                    <div class="detail-label">Redeemable</div>
+                    <div class="detail-value">@(Model.IsRedeemable ? "Yes" : "No")</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon" style="background: var(--gradient-secondary);">🎯</div>
+                    <div class="detail-label">Points Cost</div>
+                    <div class="detail-value">@(Model.PointsCost ?? 50) pts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wishlist functionality
+    window.toggleWishlist = function(element) {
+        if (element.textContent === '♡') {
+            element.textContent = '❤️';
+            element.classList.add('active');
+            showToast('Added to wishlist! ❤️', 'success');
+        } else {
+            element.textContent = '♡';
+            element.classList.remove('active');
+            showToast('Removed from wishlist', 'info');
+        }
+    };
+
+    // Toast notification system
+    window.showToast = function(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            font-weight: 600;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+
+        if (type === 'success') {
+            toast.style.background = 'var(--gradient-secondary)';
+        } else if (type === 'warning') {
+            toast.style.background = 'var(--gradient-warning)';
+        }
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.transform = 'translateX(0)';
+        }, 100);
+
+        setTimeout(() => {
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    };
+
+    // Enhanced hover effects for detail items
+    const detailItems = document.querySelectorAll('.detail-item');
+    detailItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add('fade-in');
+
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(-2px) scale(1)';
+        });
+    });
+
+    // Image gallery effect (if you want to add multiple images later)
+    const imageContainer = document.querySelector('.image-container');
+    if (imageContainer) {
+        imageContainer.addEventListener('click', function() {
+            // Add lightbox functionality here if needed
+            this.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1.02)';
+            }, 200);
+        });
+    }
+
+    // Button interaction enhancements
+    const actionButtons = document.querySelectorAll('.btn-action');
+    actionButtons.forEach(btn => {
+        if (!btn.disabled) {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.03)';
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+        }
+    });
+
+    // Smooth scroll to sections
+    const breadcrumbLinks = document.querySelectorAll('.breadcrumb-link');
+    breadcrumbLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add smooth navigation effect
+            this.style.background = 'rgba(255, 255, 255, 0.2)';
+            setTimeout(() => {
+                this.style.background = '';
+            }, 200);
+        });
+    });
+
+    // Auto-show success message for swap requests
+    if (window.location.search.includes('swap=success')) {
+        showToast('Swap request submitted successfully! 🎉', 'success');
+    }
+
+    // Add pulse effect to new/featured items
+    const imageContainer2 = document.querySelector('.pulse-glow');
+    if (imageContainer2) {
+        setTimeout(() => {
+            imageContainer2.classList.remove('pulse-glow');
+        }, 5000); // Remove pulse after 5 seconds
+    }
+});
+</script>

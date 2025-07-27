@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ReWare.Models.Item>
+
+@if (Model != null && Model.Any())
+{
+    <div id="featuredCarousel" class="carousel slide mb-4" data-ride="carousel">
+        <ol class="carousel-indicators">
+            @{
+                int ind = 0;
+                foreach (var _ in Model)
+                {
+                    <li data-target="#featuredCarousel" data-slide-to="@ind" class="@(ind==0?"active":"")"></li>
+;
+                    ind++;
+                }
+            }
+        </ol>
+        <div class="carousel-inner">
+            @{
+                int idx = 0;
+                foreach (var item in Model)
+                {
+                    var imgSrc = (item.Images != null && item.Images.Any())
+                        ? item.Images.First().ImagePath
+                        : item.ImagePath; // fallback
+
+                    <div class="carousel-item @(idx==0?"active":"")">
+                        <img src="@imgSrc"
+                             class="d-block w-100"
+                             style="height:340px;object-fit:cover;"
+                             alt="@item.Title" />
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
+                            <h5>@item.Title</h5>
+                            <p style="font-size:0.9rem">@item.Category • @item.Condition</p>
+                            <a href="@Url.Action("Details","Items", new { id = item.Id })"
+                               class="btn btn-sm btn-light">View</a>
+                        </div>
+                    </div>;
+                    idx++;
+                }
+            }
+        </div>
+        <a class="carousel-control-prev" href="#featuredCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#featuredCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+}
+else
+{
+    <p>No featured items yet.</p>
+}

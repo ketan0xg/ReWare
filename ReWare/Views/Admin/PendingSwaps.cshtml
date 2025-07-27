@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Swap>
+<h2>Pending Swaps</h2>
+<table class="table">
+    <thead>
+        <tr><th>Item</th><th>Requester</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var swap in Model)
+        {
+            <tr>
+                <td>@swap.Item.Title</td>
+                <td>@swap.Requester.Email</td>
+                <td>
+                    @using (Html.BeginForm("ApproveSwap", "Admin", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", swap.Id)
+                        <button class="btn btn-success btn-sm">Approve</button>
+                    }
+                    @using (Html.BeginForm("RejectSwap", "Admin", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", swap.Id)
+                        <button class="btn btn-danger btn-sm">Reject</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

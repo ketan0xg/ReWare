@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Item>
+<h2>Pending Items</h2>
+<table class="table">
+    <thead>
+        <tr><th>Image</th><th>Title</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><img src="@item.ImagePath" width="100" /></td>
+                <td>@item.Title</td>
+                <td>
+                    @using (Html.BeginForm("ApproveItem", "Admin", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", item.Id)
+                        <button class="btn btn-success btn-sm">Approve</button>
+                    }
+                    @using (Html.BeginForm("RejectItem", "Admin", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", item.Id)
+                        <button class="btn btn-danger btn-sm">Reject</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

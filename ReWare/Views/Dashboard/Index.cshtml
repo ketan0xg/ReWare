@@ -1,0 +1,1005 @@
+﻿@model ReWare.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "My Dashboard - ReWear";
+}
+
+<style>
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.3s;
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 3rem 0;
+        margin: -2rem -15px 3rem -15px;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .user-welcome {
+        flex: 1;
+    }
+
+    .welcome-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+    }
+
+    .user-email {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .points-showcase {
+        text-align: right;
+    }
+
+    .points-label {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 0.5rem;
+    }
+
+    .points-value {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #06D6A0, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .points-badge {
+        background: var(--gradient-secondary);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Stats Cards */
+    .stats-section {
+        margin-bottom: 3rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+            .stat-card:hover::before {
+                height: 8px;
+            }
+
+        .stat-card:nth-child(1)::before {
+            background: var(--gradient-secondary);
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: var(--gradient-accent);
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: var(--gradient-warning);
+        }
+
+        .stat-card:nth-child(4)::before {
+            background: var(--gradient-primary);
+        }
+
+    .stat-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-icon-1 {
+        background: var(--gradient-secondary);
+    }
+
+    .stat-icon-2 {
+        background: var(--gradient-accent);
+    }
+
+    .stat-icon-3 {
+        background: var(--gradient-warning);
+    }
+
+    .stat-icon-4 {
+        background: var(--gradient-primary);
+    }
+
+    .stat-info h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .stat-info p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    /* Items Grid */
+    .items-section {
+        margin-bottom: 4rem;
+    }
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .item-card {
+        background: var(--white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+    }
+
+        .item-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .item-image-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+    }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .item-card:hover .item-image {
+        transform: scale(1.1);
+    }
+
+    .item-status {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-approved {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+    .status-pending {
+        background: var(--gradient-warning);
+        color: white;
+    }
+
+    .status-rejected {
+        background: var(--gradient-accent);
+        color: white;
+    }
+
+    .item-content {
+        padding: 1.5rem;
+    }
+
+    .item-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn-item {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all var(--animation-duration) ease;
+        border: 2px solid transparent;
+        font-size: 0.9rem;
+    }
+
+    .btn-edit {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-view {
+        background: transparent;
+        color: var(--text-secondary);
+        border-color: #E5E7EB;
+    }
+
+        .btn-view:hover {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            text-decoration: none;
+        }
+
+    /* Premium Tables */
+    .table-section {
+        margin-bottom: 4rem;
+    }
+
+    .table-container {
+        background: var(--white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .table-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .table-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .table-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .premium-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .premium-table thead {
+            background: #F8FAFC;
+        }
+
+        .premium-table th {
+            padding: 1.5rem 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: left;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .premium-table td {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #E5E7EB;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .premium-table tbody tr {
+            transition: all var(--animation-duration) ease;
+        }
+
+            .premium-table tbody tr:hover {
+                background: #F8FAFC;
+                transform: scale(1.01);
+            }
+
+    .swap-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending-swap {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .status-approved-swap {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .status-rejected-swap {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .points-change {
+        font-weight: 700;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .points-positive {
+        color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .points-negative {
+        color: var(--accent-secondary);
+        background: rgba(247, 37, 133, 0.1);
+    }
+
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.5;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .empty-text {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn-cta {
+        background: var(--gradient-secondary);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all var(--animation-duration) ease;
+        display: inline-block;
+    }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .dashboard-header {
+            padding: 2rem 0;
+            margin: -2rem -15px 2rem -15px;
+        }
+
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .points-showcase {
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .items-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .section-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .premium-table {
+            font-size: 0.8rem;
+        }
+
+            .premium-table th,
+            .premium-table td {
+                padding: 1rem;
+            }
+
+        .item-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Loading Animation */
+    .fade-in {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="user-welcome">
+                <h1 class="welcome-title">Welcome back, @Model.UserName!</h1>
+                <p class="welcome-subtitle">Track your sustainable fashion journey</p>
+                <div class="user-email">
+                    📧 @Model.Email
+                </div>
+            </div>
+            <div class="points-showcase">
+                <div class="points-label">Your ReWear Points</div>
+                <div class="points-value">@Model.Points</div>
+                <div class="points-badge">💎 Premium Member</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Stats Overview -->
+    <div class="stats-section fade-in">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-1">📦</div>
+                    <div class="stat-info">
+                        <h3>Total Items</h3>
+                        <p>Items you've listed</p>
+                    </div>
+                </div>
+                <div class="stat-value">@Model.MyItems.Count()</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-2">🔄</div>
+                    <div class="stat-info">
+                        <h3>Active Swaps</h3>
+                        <p>Ongoing exchanges</p>
+                    </div>
+                </div>
+                <div class="stat-value">@Model.MySwaps.Count()</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-3">⭐</div>
+                    <div class="stat-info">
+                        <h3>Success Rate</h3>
+                        <p>Successful exchanges</p>
+                    </div>
+                </div>
+                <div class="stat-value">95%</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-4">🌱</div>
+                    <div class="stat-info">
+                        <h3>Impact Score</h3>
+                        <p>Environmental benefit</p>
+                    </div>
+                </div>
+                <div class="stat-value">A+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Items Section -->
+    <div class="items-section fade-in">
+        <div class="section-header">
+            <div class="section-icon">👕</div>
+            <h2 class="section-title">My Fashion Collection</h2>
+        </div>
+
+        @if (Model.MyItems.Any())
+        {
+            <div class="items-grid">
+                @foreach (var item in Model.MyItems)
+                {
+                    <div class="item-card">
+                        <div class="item-image-container">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath" alt="@item.Title" class="item-image" />
+                            }
+                            else
+                            {
+                                <div class="item-image" style="background: var(--gradient-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                                    👕
+                                </div>
+                            }
+
+                            @{
+                                string statusClass = "status-pending";
+                                if (item.ModerationStatus == "Approved")
+                                {
+                                    statusClass = "status-approved";
+                                }
+                                else if (item.ModerationStatus == "Rejected")
+                                {
+                                    statusClass = "status-rejected";
+                                }
+                            }
+
+                            <div class="item-status @statusClass">
+                                @(item.ModerationStatus ?? "Pending")
+                            </div>
+                        </div>
+
+                        <div class="item-content">
+                            <h3 class="item-title">@item.Title</h3>
+                            <div class="item-actions">
+                                <a href="@Url.Action("Edit", "Items", new { id = item.Id })" class="btn-item btn-edit">
+                                    ✏️ Edit
+                                </a>
+                                <a href="@Url.Action("Details", "Items", new { id = item.Id })" class="btn-item btn-view">
+                                    👁️ View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">👗</div>
+                <h3 class="empty-title">No Items Yet</h3>
+                <p class="empty-text">
+                    Start your sustainable fashion journey by listing your first item. Share clothes you no longer wear and help build our eco-friendly community.
+                </p>
+                <a href="@Url.Action("Create", "Items")" class="btn-cta">
+                    ✨ List Your First Item
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Swap Requests Section -->
+    <div class="table-section fade-in">
+        <div class="section-header">
+            <div class="section-icon">🔄</div>
+            <h2 class="section-title">My Swap Journey</h2>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-icon">🔄</div>
+                <h3 class="table-title">Recent Swap Requests</h3>
+            </div>
+
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.MySwaps.Any())
+                    {
+                        foreach (var swap in Model.MySwaps)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@swap.Item.Title</strong>
+                                </td>
+                                <td>
+                                    @{
+                                        string swapStatusClass = "status-pending-swap";
+                                        if (swap.Status == "Approved")
+                                        {
+                                            swapStatusClass = "status-approved-swap";
+                                        }
+                                        else if (swap.Status == "Rejected")
+                                        {
+                                            swapStatusClass = "status-rejected-swap";
+                                        }
+                                    }
+                                    <span class="swap-status @swapStatusClass">@swap.Status</span>
+                                </td>
+                                <td>Just now</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Items", new { id = swap.Item.Id })" class="btn-item btn-view" style="flex: none; padding: 0.5rem 1rem;">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state" style="padding: 2rem;">
+                                    <div class="empty-icon" style="font-size: 2rem;">🔄</div>
+                                    <p class="empty-text" style="margin: 0;">No swap requests yet. Start browsing items to make your first swap!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Points History Section -->
+    <div class="table-section fade-in">
+        <div class="section-header">
+            <div class="section-icon">💎</div>
+            <h2 class="section-title">Points Activity</h2>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-icon">💰</div>
+                <h3 class="table-title">Transaction History</h3>
+            </div>
+
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Points Change</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.MyTransactions.Any())
+                    {
+                        foreach (var tx in Model.MyTransactions)
+                        {
+                            <tr>
+                                <td>@tx.Date.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <strong>@tx.Description</strong>
+                                </td>
+                                <td>
+                                    @if (tx.PointsAdded > 0)
+                                    {
+                                        <span class="points-change points-positive">+@tx.PointsAdded</span>
+                                    }
+                                    else if (tx.PointsDeducted > 0)
+                                    {
+                                        <span class="points-change points-negative">-@tx.PointsDeducted</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@Model.Points pts</strong>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state" style="padding: 2rem;">
+                                    <div class="empty-icon" style="font-size: 2rem;">💎</div>
+                                    <p class="empty-text" style="margin: 0;">No transactions yet. Start swapping to earn your first points!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Animate stats on load
+        const statValues = document.querySelectorAll('.stat-value');
+        statValues.forEach((stat, index) => {
+            const value = parseInt(stat.textContent) || 0;
+            if (!isNaN(value)) {
+                animateCounter(stat, 0, value, 2000, index * 200);
+            }
+        });
+
+        // Counter animation function
+        function animateCounter(element, start, end, duration, delay) {
+            setTimeout(() => {
+                const increment = (end - start) / (duration / 16);
+                let current = start;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= end) {
+                        element.textContent = end;
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current);
+                    }
+                }, 16);
+            }, delay);
+        }
+
+        // Add stagger animation to cards
+        const cards = document.querySelectorAll('.item-card, .stat-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+
+        // Enhanced table row interactions
+        const tableRows = document.querySelectorAll('.premium-table tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function () {
+                this.style.background = '#F0F7FF';
+                this.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.1)';
+            });
+
+            row.addEventListener('mouseleave', function () {
+                this.style.background = '';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Smooth scroll to sections
+        const sectionHeaders = document.querySelectorAll('.section-header');
+        sectionHeaders.forEach((header, index) => {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', function () {
+                const nextSection = this.nextElementSibling;
+                if (nextSection) {
+                    nextSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects to empty state buttons
+        const ctaButtons = document.querySelectorAll('.btn-cta');
+        ctaButtons.forEach(btn => {
+            btn.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
+            });
+
+            btn.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(-2px) scale(1)';
+            });
+        });
+
+        // Points showcase animation
+        const pointsValue = document.querySelector('.points-value');
+        if (pointsValue) {
+            const points = parseInt(pointsValue.textContent) || 0;
+            pointsValue.style.opacity = '0';
+            pointsValue.style.transform = 'scale(0)';
+
+            setTimeout(() => {
+                pointsValue.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                pointsValue.style.opacity = '1';
+                pointsValue.style.transform = 'scale(1)';
+
+                // Animate the number
+                animateCounter(pointsValue, 0, points, 1500, 200);
+            }, 500);
+        }
+    });
+</script>

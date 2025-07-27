@@ -1,0 +1,834 @@
+﻿@model IEnumerable<ReWare.Models.Item>
+@{
+    ViewBag.Title = "ReWear - Community Clothing Exchange";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06D6A0 100%);
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.6s;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--light);
+        overflow-x: hidden;
+    }
+
+    .container-fluid {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* Animated Background */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(-45deg, #667eea, #764ba2, #06D6A0, #F72585);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        opacity: 0.03;
+    }
+
+    @@keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Hero Section */
+    .hero-wrapper {
+        position: relative;
+        margin: 2rem 0 4rem;
+        perspective: 1000px;
+    }
+
+    .hero-section {
+        background: var(--gradient-hero);
+        border-radius: 30px;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        box-shadow: var(--shadow-xl);
+        transform-style: preserve-3d;
+        transition: transform var(--animation-duration) ease;
+    }
+
+        .hero-section:hover {
+            transform: rotateX(2deg) rotateY(-2deg);
+            box-shadow: var(--shadow-glow);
+        }
+
+    .hero-bg-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(255,255,255,0.06) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        33% {
+            transform: translateY(-10px) rotate(1deg);
+        }
+
+        66% {
+            transform: translateY(5px) rotate(-1deg);
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 4rem 3rem;
+        color: white;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: slideInDown var(--animation-duration) ease;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0, #ffffff);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShimmer 3s ease-in-out infinite, slideInLeft var(--animation-duration) ease;
+        letter-spacing: -2px;
+    }
+
+    @@keyframes textShimmer {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .hero-subtitle {
+        font-size: 1.4rem;
+        line-height: 1.8;
+        margin-bottom: 3rem;
+        opacity: 0.95;
+        font-weight: 400;
+        animation: slideInRight var(--animation-duration) ease;
+        max-width: 600px;
+    }
+
+    .hero-cta-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        animation: slideInUp var(--animation-duration) ease 0.3s both;
+    }
+
+    .btn-premium {
+        position: relative;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-glow);
+        }
+
+    .btn-primary-premium {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-secondary-premium {
+        background: var(--gradient-secondary);
+        color: white;
+        border: 2px solid transparent;
+    }
+
+    .btn-outline-premium {
+        background: transparent;
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    /* Stats Section */
+    .stats-section {
+        margin: 4rem 0;
+        animation: slideInUp var(--animation-duration) ease 0.6s both;
+    }
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        animation: countUp 2s ease-out;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.8;
+    }
+
+    /* Featured Section */
+    .featured-section {
+        margin: 4rem 0;
+        animation: slideInUp var(--animation-duration) ease 0.9s both;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        letter-spacing: -1px;
+    }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .featured-carousel {
+        background: var(--white);
+        border-radius: 25px;
+        padding: 3rem 2rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .featured-carousel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-secondary);
+        }
+
+    /* Features Grid */
+    .features-section {
+        margin: 4rem 0;
+        animation: slideInUp var(--animation-duration) ease 1.2s both;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+    }
+
+    .feature-card {
+        background: var(--white);
+        border-radius: 25px;
+        padding: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        transform-origin: center center;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .feature-card:nth-child(1) {
+            --gradient: var(--gradient-secondary);
+        }
+
+        .feature-card:nth-child(2) {
+            --gradient: var(--gradient-accent);
+        }
+
+        .feature-card:nth-child(3) {
+            --gradient: var(--gradient-primary);
+        }
+
+    .feature-header {
+        background: var(--gradient);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .feature-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+    @@keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .feature-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .feature-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-body {
+        padding: 2.5rem 2rem;
+    }
+
+    .feature-description {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+    }
+
+    .btn-feature {
+        background: var(--gradient);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-feature:hover::before {
+            left: 100%;
+        }
+
+        .btn-feature:hover {
+            transform: translateX(5px);
+            text-decoration: none;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+    /* Animations */
+    @@keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes countUp {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .container-fluid {
+            padding: 0 1rem;
+        }
+
+        .hero-content {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .hero-cta-group {
+            justify-content: center;
+        }
+
+        .btn-premium {
+            width: 100%;
+            text-align: center;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .hero-section:hover {
+            transform: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* Accessibility */
+    @@media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Dark mode support */
+    @@media (prefers-color-scheme: dark) {
+        :root {
+            --light: #0F172A;
+            --white: #1E293B;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+        }
+    }
+</style>
+
+<!-- Animated Background -->
+<div class="animated-bg"></div>
+
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="hero-wrapper">
+        <div class="hero-section">
+            <div class="hero-bg-pattern"></div>
+            <div class="hero-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="hero-badge">
+                            ✨ Sustainable Fashion Revolution
+                        </div>
+                        <h1 class="hero-title">ReWear</h1>
+                        <p class="hero-subtitle">
+                            Transform your wardrobe, transform the world. Join thousands of eco-conscious fashion lovers in the ultimate clothing exchange experience.
+                        </p>
+                        <div class="hero-cta-group">
+                            <a class="btn-premium btn-primary-premium" href="@Url.Action("Index","Items")">
+                                🌍 Explore Collection
+                            </a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="btn-premium btn-secondary-premium" href="@Url.Action("Create","Items")">
+                                    ⚡ List Item
+                                </a>
+                                <a class="btn-premium btn-outline-premium" href="@Url.Action("Index","Dashboard")">
+                                    📈 Dashboard
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn-premium btn-outline-premium" href="@Url.Action("Register","Account")">
+                                    🚀 Join Community
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-none d-lg-flex justify-content-center align-items-center">
+                        <div style="font-size: 12rem; opacity: 0.4; animation: float 6s ease-in-out infinite;">
+                            ♻️
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">🌱</div>
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Items Exchanged</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">15K+</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-number">125T</div>
+                <div class="stat-label">CO₂ Saved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number">4.9/5</div>
+                <div class="stat-label">User Rating</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Section -->
+    <div class="featured-section">
+        <div class="section-header">
+            <h2 class="section-title">Trending Now</h2>
+            <p class="section-subtitle">
+                Discover the most popular items in our community marketplace
+            </p>
+        </div>
+        <div class="featured-carousel">
+            @Html.Partial("_FeaturedCarousel", Model)
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose ReWear?</h2>
+            <p class="section-subtitle">
+                Experience the future of sustainable fashion with our innovative platform
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🔮</div>
+                    <h3 class="feature-title">AI-Powered Matching</h3>
+                </div>
+                <div class="feature-body">
+                    <p class="feature-description">
+                        Our advanced algorithm analyzes your style preferences, size, and swap history to suggest perfect matches. Find exactly what you're looking for with intelligent recommendations.
+                    </p>
+                    <a href="@Url.Action("Index","Items")" class="btn-feature">
+                        Start Swapping →
+                    </a>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">💎</div>
+                    <h3 class="feature-title">Premium Rewards</h3>
+                </div>
+                <div class="feature-body">
+                    <p class="feature-description">
+                        Earn ReWear coins for every successful swap, review, and referral. Unlock exclusive designer pieces, early access to collections, and special community events.
+                    </p>
+                    <a href="@Url.Action("Index","Dashboard")" class="btn-feature">
+                        View Rewards →
+                    </a>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">Instant Publishing</h3>
+                </div>
+                <div class="feature-body">
+                    <p class="feature-description">
+                        Upload photos with our smart camera tool that automatically enhances lighting and removes backgrounds. Add descriptions with AI assistance and go live in seconds.
+                    </p>
+                    <a href="@Url.Action("Create","Items")" class="btn-feature">
+                        List Now →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('[class*="slideIn"]').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+
+        // Add smooth parallax scrolling
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero-bg-pattern');
+            const speed = scrolled * 0.5;
+            if (parallax) {
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+
+        // Dynamic counter animation
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+            const increment = target / 100;
+            let current = 0;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = counter.textContent;
+                    clearInterval(timer);
+                } else {
+                    const suffix = counter.textContent.replace(/[\d,]/g, '');
+                    counter.textContent = Math.floor(current).toLocaleString() + suffix;
+                }
+            }, 20);
+        });
+
+        // Enhanced hover effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-15px) rotateX(5deg) rotateY(5deg) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+        // Magical cursor trail effect
+        const cursor = document.createElement('div');
+        cursor.className = 'cursor-trail';
+        cursor.style.cssText = `
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, rgba(102,126,234,0.8), transparent);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: all 0.1s ease;
+        mix-blend-mode: difference;
+    `;
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+    });
+</script>

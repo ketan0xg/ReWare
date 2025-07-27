@@ -1,0 +1,588 @@
+﻿@using Microsoft.AspNet.Identity
+
+<style>
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.3s;
+    }
+
+    /* User Menu Container */
+    .user-menu-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Authenticated User Menu */
+    .user-profile-menu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .user-avatar-container {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all var(--animation-duration) ease;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .user-avatar:hover::before {
+            left: 100%;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow);
+            border-color: white;
+        }
+
+        .user-avatar.active {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+    .online-indicator {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        background: var(--success);
+        border: 2px solid white;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    .user-greeting {
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 600;
+        font-size: 1rem;
+        white-space: nowrap;
+        transition: all var(--animation-duration) ease;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+        .user-greeting:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+    /* Dropdown Menu */
+    .dropdown-menu-premium {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--white);
+        border: none;
+        border-radius: 20px;
+        box-shadow: var(--shadow-xl);
+        padding: 1rem 0;
+        margin-top: 1rem;
+        min-width: 250px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+    }
+
+        .dropdown-menu-premium.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-menu-premium::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+            filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.1));
+        }
+
+    .dropdown-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #E5E7EB;
+        margin-bottom: 0.5rem;
+    }
+
+    .dropdown-user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .dropdown-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .dropdown-user-details h6 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+
+    .dropdown-user-details p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .dropdown-item-premium {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all var(--animation-duration) ease;
+        font-weight: 500;
+        border: none;
+        background: none;
+        width: 100%;
+        cursor: pointer;
+    }
+
+        .dropdown-item-premium:hover {
+            background: linear-gradient(135deg, #F8FAFC 0%, #E5E7EB 100%);
+            color: var(--text-primary);
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item-premium.logout {
+            color: var(--accent-secondary);
+            border-top: 1px solid #E5E7EB;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+            .dropdown-item-premium.logout:hover {
+                background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+                color: #991B1B;
+            }
+
+    .dropdown-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    /* Guest Authentication Buttons */
+    .auth-buttons-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .auth-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+        font-size: 0.95rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        white-space: nowrap;
+    }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            text-decoration: none;
+        }
+
+    .btn-login {
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+    }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: var(--shadow-md);
+        }
+
+    .btn-register {
+        background: var(--gradient-secondary);
+        color: white;
+        border-color: transparent;
+        box-shadow: var(--shadow-md);
+    }
+
+        .btn-register:hover {
+            box-shadow: var(--shadow-glow);
+            color: white;
+        }
+
+    /* Mobile Responsive */
+    @@media (max-width: 768px) {
+        .user-greeting {
+            display: none;
+        }
+
+        .auth-buttons-container {
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .auth-btn {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .dropdown-menu-premium {
+            right: -20px;
+            left: -20px;
+            min-width: auto;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Notification Badge */
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--accent-secondary);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 2px solid white;
+        animation: bounce 2s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-5px);
+        }
+
+        60% {
+            transform: translateY(-3px);
+        }
+    }
+</style>
+
+@if (Request.IsAuthenticated)
+{
+    <div class="user-menu-container">
+        <div class="user-profile-menu">
+            <!-- User Greeting (visible on larger screens) -->
+            <a href="@Url.Action("Index", "Manage")" class="user-greeting d-none d-lg-block">
+                👋 Hello, @User.Identity.GetUserName()!
+            </a>
+
+            <!-- User Avatar with Dropdown -->
+            <div class="user-avatar-container" onclick="toggleDropdown()">
+                <div class="user-avatar" id="userAvatar">
+                    @User.Identity.GetUserName().Substring(0, 1).ToUpper()
+                    <div class="online-indicator"></div>
+                    <div class="notification-badge">3</div>
+                </div>
+
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu-premium" id="userDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                @User.Identity.GetUserName().Substring(0, 1).ToUpper()
+                            </div>
+                            <div class="dropdown-user-details">
+                                <h6>@User.Identity.GetUserName()</h6>
+                                <p>Premium Member</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="@Url.Action("Index", "Dashboard")" class="dropdown-item-premium">
+                        <div class="dropdown-icon">📊</div>
+                        <span>My Dashboard</span>
+                    </a>
+
+                    <a href="@Url.Action("Index", "Manage")" class="dropdown-item-premium">
+                        <div class="dropdown-icon">⚙️</div>
+                        <span>Account Settings</span>
+                    </a>
+
+                    <a href="@Url.Action("MyItems", "Items")" class="dropdown-item-premium">
+                        <div class="dropdown-icon">👕</div>
+                        <span>My Items</span>
+                    </a>
+
+                    <a href="@Url.Action("Wishlist", "Items")" class="dropdown-item-premium">
+                        <div class="dropdown-icon">❤️</div>
+                        <span>Wishlist</span>
+                    </a>
+
+                    <div class="dropdown-item-premium logout" onclick="document.getElementById('logoutForm').submit()">
+                        <div class="dropdown-icon">🚪</div>
+                        <span>Sign Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Logout Form -->
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", style = "display: none;" }))
+    {
+        @Html.AntiForgeryToken()
+    }
+}
+else
+{
+    <div class="auth-buttons-container">
+        <a href="@Url.Action("Login", "Account")" class="auth-btn btn-login">
+            🔐 Sign In
+        </a>
+        <a href="@Url.Action("Register", "Account")" class="auth-btn btn-register">
+            ✨ Join Now
+        </a>
+    </div>
+}
+
+<script>
+// Dropdown functionality
+let isDropdownOpen = false;
+
+function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    const avatar = document.getElementById('userAvatar');
+
+    if (isDropdownOpen) {
+        closeDropdown();
+    } else {
+        openDropdown();
+    }
+}
+
+function openDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    const avatar = document.getElementById('userAvatar');
+
+    dropdown.classList.add('show');
+    avatar.classList.add('active');
+    isDropdownOpen = true;
+
+    // Add click outside listener
+    setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+    }, 100);
+}
+
+function closeDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    const avatar = document.getElementById('userAvatar');
+
+    dropdown.classList.remove('show');
+    avatar.classList.remove('active');
+    isDropdownOpen = false;
+
+    // Remove click outside listener
+    document.removeEventListener('click', handleClickOutside);
+}
+
+function handleClickOutside(event) {
+    const userMenu = document.querySelector('.user-profile-menu');
+    if (!userMenu.contains(event.target)) {
+        closeDropdown();
+    }
+}
+
+// Enhanced button interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add ripple effect to auth buttons
+    const authButtons = document.querySelectorAll('.auth-btn');
+    authButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            ripple.style.cssText += `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            `;
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Add hover sound effect (optional)
+    const interactiveElements = document.querySelectorAll('.user-avatar, .auth-btn, .dropdown-item-premium');
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            // Add subtle hover sound or haptic feedback here if desired
+            this.style.transition = 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    });
+
+    // Notification badge animation
+    const notificationBadge = document.querySelector('.notification-badge');
+    if (notificationBadge) {
+        setInterval(() => {
+            notificationBadge.style.animation = 'none';
+            setTimeout(() => {
+                notificationBadge.style.animation = 'bounce 2s infinite';
+            }, 10);
+        }, 10000); // Bounce every 10 seconds
+    }
+});
+
+// Add ripple animation CSS
+const style = document.createElement('style');
+style.textContent = `
+    @@keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    .auth-btn {
+        position: relative;
+        overflow: hidden;
+    }
+`;
+document.head.appendChild(style);
+</script>

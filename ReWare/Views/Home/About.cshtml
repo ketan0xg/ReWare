@@ -1,0 +1,994 @@
+﻿@{
+    ViewBag.Title = "About ReWear - Sustainable Fashion Revolution";
+}
+
+<style>
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06D6A0 100%);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.3s;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        background: var(--gradient-hero);
+        color: white;
+        padding: 4rem 0 3rem;
+        margin: -2rem -15px 4rem -15px;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: slideInDown 0.6s ease;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 6vw, 5rem);
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0, #ffffff);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShimmer 3s ease-in-out infinite, slideInLeft 0.6s ease;
+        letter-spacing: -2px;
+        line-height: 1.1;
+    }
+
+    @@keyframes textShimmer {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .hero-subtitle {
+        font-size: 1.4rem;
+        line-height: 1.8;
+        margin-bottom: 3rem;
+        opacity: 0.95;
+        font-weight: 400;
+        animation: slideInRight 0.6s ease;
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+        animation: slideInUp 0.6s ease 0.3s both;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Mission Section */
+    .mission-section {
+        margin-bottom: 4rem;
+        animation: slideInUp 0.6s ease 0.6s both;
+    }
+
+    .section-container {
+        background: var(--white);
+        border-radius: 25px;
+        padding: 3rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .section-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-secondary);
+        }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0 auto 2rem;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .section-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        letter-spacing: -1px;
+    }
+
+    .section-subtitle {
+        font-size: 1.3rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        line-height: 1.7;
+    }
+
+    .mission-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .mission-card {
+        background: #F8FAFC;
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        text-align: center;
+        transition: all 0.4s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-secondary);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-xl);
+        }
+
+            .mission-card:hover::before {
+                opacity: 0.05;
+            }
+
+    .mission-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        margin: 0 auto 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .mission-card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .mission-card-text {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Values Section */
+    .values-section {
+        margin-bottom: 4rem;
+        animation: slideInUp 0.6s ease 0.9s both;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .value-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        transform-origin: center center;
+    }
+
+        .value-card:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .value-card:nth-child(1) {
+            --gradient: var(--gradient-secondary);
+        }
+
+        .value-card:nth-child(2) {
+            --gradient: var(--gradient-accent);
+        }
+
+        .value-card:nth-child(3) {
+            --gradient: var(--gradient-primary);
+        }
+
+    .value-header {
+        background: var(--gradient);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .value-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+    @@keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .value-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .value-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .value-body {
+        padding: 2.5rem 2rem;
+    }
+
+    .value-description {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    /* Team Section */
+    .team-section {
+        margin-bottom: 4rem;
+        animation: slideInUp 0.6s ease 1.2s both;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .team-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.4s ease;
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-secondary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+            .team-card:hover::before {
+                transform: scaleX(1);
+            }
+
+    .team-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0 auto 1.5rem;
+        border: 4px solid #F8FAFC;
+        transition: all 0.4s ease;
+    }
+
+    .team-card:hover .team-avatar {
+        transform: scale(1.1);
+        border-color: var(--accent);
+    }
+
+    .team-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .team-role {
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .team-bio {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        animation: slideInUp 0.6s ease 1.5s both;
+    }
+
+    .cta-container {
+        background: var(--gradient-hero);
+        color: white;
+        padding: 4rem 3rem;
+        border-radius: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-xl);
+    }
+
+        .cta-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+
+    .cta-content {
+        position: relative;
+        z-index: 2;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cta-text {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        line-height: 1.7;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-cta {
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-cta:hover::before {
+            left: 100%;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-glow);
+        }
+
+    .btn-primary-cta {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary-cta {
+        background: var(--gradient-secondary);
+        color: white;
+        border: 2px solid transparent;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .about-hero {
+            padding: 3rem 0 2rem;
+            margin: -2rem -15px 3rem -15px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-stats {
+            gap: 2rem;
+        }
+
+        .section-container {
+            padding: 2rem 1.5rem;
+        }
+
+        .mission-content,
+        .values-grid,
+        .team-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .cta-container {
+            padding: 3rem 2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-cta {
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+        }
+    }
+
+    /* Animation Classes */
+    @@keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<main>
+    <!-- Hero Section -->
+    <div class="about-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    🌱 Sustainable Fashion Movement
+                </div>
+                <h1 class="hero-title">About ReWear</h1>
+                <p class="hero-subtitle">
+                    We're revolutionizing fashion through community-driven sustainability. Join thousands of eco-conscious individuals creating a circular economy, one clothing swap at a time.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Items Exchanged</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15K+</span>
+                        <span class="stat-label">Active Members</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">125T</span>
+                        <span class="stat-label">CO₂ Saved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Mission Section -->
+        <div class="mission-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <h2 class="section-title">Our Mission</h2>
+                    <p class="section-subtitle">
+                        Creating a sustainable future where fashion never goes to waste and every piece of clothing gets the love it deserves.
+                    </p>
+                </div>
+
+                <div class="mission-content">
+                    <div class="mission-card">
+                        <div class="mission-card-icon">♻️</div>
+                        <h3 class="mission-card-title">Circular Fashion</h3>
+                        <p class="mission-card-text">
+                            We believe in keeping clothes in circulation, reducing waste and extending the lifecycle of every garment through our innovative swap system.
+                        </p>
+                    </div>
+
+                    <div class="mission-card">
+                        <div class="mission-card-icon">🤝</div>
+                        <h3 class="mission-card-title">Community First</h3>
+                        <p class="mission-card-text">
+                            Our platform thrives on community connections, bringing together like-minded individuals who share a passion for sustainable living.
+                        </p>
+                    </div>
+
+                    <div class="mission-card">
+                        <div class="mission-card-icon">🌍</div>
+                        <h3 class="mission-card-title">Environmental Impact</h3>
+                        <p class="mission-card-text">
+                            Every swap on our platform represents a step towards reducing textile waste and lowering the fashion industry's carbon footprint.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="values-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon">💎</div>
+                    <h2 class="section-title">Our Values</h2>
+                    <p class="section-subtitle">
+                        The principles that guide every decision we make and every feature we build.
+                    </p>
+                </div>
+
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-header">
+                            <div class="value-icon">🌱</div>
+                            <h3 class="value-title">Sustainability</h3>
+                        </div>
+                        <div class="value-body">
+                            <p class="value-description">
+                                Environmental responsibility is at our core. We're committed to reducing fashion waste and promoting conscious consumption through innovative technology and community engagement.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-header">
+                            <div class="value-icon">🔒</div>
+                            <h3 class="value-title">Trust & Safety</h3>
+                        </div>
+                        <div class="value-body">
+                            <p class="value-description">
+                                We maintain the highest standards of safety and trust through rigorous item verification, secure transactions, and a supportive community moderation system.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-header">
+                            <div class="value-icon">✨</div>
+                            <h3 class="value-title">Innovation</h3>
+                        </div>
+                        <div class="value-body">
+                            <p class="value-description">
+                                We continuously evolve our platform with cutting-edge features, intuitive design, and smart matching algorithms to enhance your sustainable fashion journey.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon">👥</div>
+                    <h2 class="section-title">Meet Our Team</h2>
+                    <p class="section-subtitle">
+                        Passionate individuals working together to revolutionize sustainable fashion.
+                    </p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">👩‍💼</div>
+                        <h4 class="team-name">Sarah Johnson</h4>
+                        <p class="team-role">Founder & CEO</p>
+                        <p class="team-bio">
+                            Sustainable fashion advocate with 10+ years in environmental tech. Passionate about creating positive change through innovative platforms.
+                        </p>
+                    </div>
+
+                    <div class="team-card">
+                        <div class="team-avatar">👨‍💻</div>
+                        <h4 class="team-name">Mike Chen</h4>
+                        <p class="team-role">Lead Developer</p>
+                        <p class="team-bio">
+                            Full-stack engineer specializing in scalable platforms. Believes technology can solve environmental challenges when applied thoughtfully.
+                        </p>
+                    </div>
+
+                    <div class="team-card">
+                        <div class="team-avatar">👩‍🎨</div>
+                        <h4 class="team-name">Emma Rodriguez</h4>
+                        <p class="team-role">Head of Design</p>
+                        <p class="team-bio">
+                            UX/UI designer focused on creating intuitive experiences. Dedicated to making sustainable choices accessible and enjoyable for everyone.
+                        </p>
+                    </div>
+
+                    <div class="team-card">
+                        <div class="team-avatar">👨‍🌾</div>
+                        <h4 class="team-name">David Wilson</h4>
+                        <p class="team-role">Sustainability Officer</p>
+                        <p class="team-bio">
+                            Environmental scientist ensuring our platform delivers real impact. Measures and optimizes our contribution to circular economy goals.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="cta-section">
+            <div class="cta-container">
+                <div class="cta-content">
+                    <h2 class="cta-title">Join the Revolution</h2>
+                    <p class="cta-text">
+                        Ready to transform your wardrobe while making a positive impact on the planet? Join thousands of conscious consumers already using ReWear.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="@Url.Action("Index", "Items")" class="btn-cta btn-primary-cta">
+                            🌟 Start Browsing
+                        </a>
+                        <a href="@Url.Action("Register", "Account")" class="btn-cta btn-secondary-cta">
+                            🚀 Join Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate statistics on scroll
+    const stats = document.querySelectorAll('.stat-number');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const stat = entry.target;
+                const finalValue = stat.textContent;
+                const numericValue = parseInt(finalValue.replace(/[^\d]/g, '')) || 0;
+
+                animateCounter(stat, 0, numericValue, 2000, finalValue);
+                observer.unobserve(stat);
+            }
+        });
+    });
+
+    stats.forEach(stat => observer.observe(stat));
+
+    // Counter animation function
+    function animateCounter(element, start, end, duration, originalText) {
+        const increment = end / (duration / 16);
+        let current = start;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= end) {
+                element.textContent = originalText;
+                clearInterval(timer);
+            } else {
+                const suffix = originalText.replace(/[\d,]/g, '');
+                element.textContent = Math.floor(current).toLocaleString() + suffix;
+            }
+        }, 16);
+    }
+
+    // Enhanced card interactions
+    const cards = document.querySelectorAll('.mission-card, .value-card, .team-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Parallax effect for hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroBackground = document.querySelector('.about-hero::before');
+        if (heroBackground) {
+            const speed = scrolled * 0.5;
+            heroBackground.style.transform = `translateY(${speed}px)`;
+        }
+    });
+
+    // Button ripple effect
+    const buttons = document.querySelectorAll('.btn-cta');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            ripple.style.cssText += `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            `;
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Team card hover effects
+    const teamCards = document.querySelectorAll('.team-card');
+    teamCards.forEach(card => {
+        const avatar = card.querySelector('.team-avatar');
+
+        card.addEventListener('mouseenter', function() {
+            avatar.style.transform = 'scale(1.15) rotate(5deg)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            avatar.style.transform = 'scale(1) rotate(0deg)';
+        });
+    });
+});
+
+// Add ripple animation CSS
+const style = document.createElement('style');
+style.textContent = `
+    @@keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    .btn-cta {
+        position: relative;
+        overflow: hidden;
+    }
+`;
+document.head.appendChild(style);
+</script>

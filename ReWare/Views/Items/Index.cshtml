@@ -1,0 +1,889 @@
+﻿@model IEnumerable<ReWare.Models.Item>
+@{
+    ViewBag.Title = "Browse Items - ReWear";
+}
+
+<style>
+    :root {
+        --primary: #0A0E27;
+        --secondary: #1E3A8A;
+        --accent: #06D6A0;
+        --accent-secondary: #F72585;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --light: #F8FAFC;
+        --white: #FFFFFF;
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #0891B2 100%);
+        --gradient-accent: linear-gradient(135deg, #F72585 0%, #B91C1C 100%);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+        --border-radius: 20px;
+        --animation-duration: 0.3s;
+    }
+
+    /* Page Header */
+    .page-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 4rem 0 3rem;
+        margin: -2rem -15px 3rem -15px;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+    }
+
+    .page-header-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .page-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #ffffff, #06D6A0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -1px;
+    }
+
+    .page-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Advanced Filter Section */
+    .filter-section {
+        background: var(--white);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 3rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .filter-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-secondary);
+        }
+
+    .filter-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .filter-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-group {
+        position: relative;
+    }
+
+    .filter-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-input, .filter-select {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 15px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--white);
+        transition: all var(--animation-duration) ease;
+        appearance: none;
+    }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(6, 214, 160, 0.1);
+            transform: translateY(-2px);
+        }
+
+    .filter-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 1rem center;
+        background-repeat: no-repeat;
+        background-size: 1rem;
+        padding-right: 3rem;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-filter {
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        font-size: 1.1rem;
+    }
+
+        .btn-filter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-filter:hover::before {
+            left: 100%;
+        }
+
+        .btn-filter:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .btn-primary-filter {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+    .btn-secondary-filter {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 2px solid #E5E7EB;
+    }
+
+        .btn-secondary-filter:hover {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+        }
+
+    /* Results Section */
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .results-count {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+        .results-count .highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+    .view-toggle {
+        display: flex;
+        background: var(--white);
+        border-radius: 15px;
+        padding: 0.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid #E5E7EB;
+    }
+
+    .view-btn {
+        padding: 0.75rem 1.25rem;
+        border: none;
+        background: transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all var(--animation-duration) ease;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+        .view-btn.active {
+            background: var(--gradient-secondary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .view-btn:hover:not(.active) {
+            background: #F3F4F6;
+            color: var(--text-primary);
+        }
+
+    /* Items Grid */
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .item-card {
+        background: var(--white);
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        position: relative;
+        transform-origin: center center;
+    }
+
+        .item-card:hover {
+            transform: translateY(-10px) rotateX(5deg) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+    .item-image-container {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+        background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+    }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .item-card:hover .item-image {
+        transform: scale(1.1);
+    }
+
+    .item-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-new {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+    .badge-featured {
+        background: var(--gradient-accent);
+        color: white;
+    }
+
+    .item-wishlist {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--animation-duration) ease;
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+    }
+
+        .item-wishlist:hover {
+            background: var(--gradient-accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+    .item-content {
+        padding: 2rem;
+    }
+
+    .item-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .item-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .meta-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--gradient-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.7rem;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-item {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all var(--animation-duration) ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-item:hover::before {
+            left: 100%;
+        }
+
+    .btn-view {
+        background: var(--gradient-secondary);
+        color: white;
+    }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-swap {
+        background: transparent;
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+
+        .btn-swap:hover {
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+        opacity: 0.5;
+    }
+
+    .empty-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .empty-text {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 3rem 0 2rem;
+            margin: -2rem -15px 2rem -15px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+        }
+
+        .filter-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .filter-actions {
+            flex-direction: column;
+        }
+
+        .btn-filter {
+            width: 100%;
+        }
+
+        .results-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .items-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px) scale(1.01);
+        }
+
+        .item-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Loading Animation */
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #E5E7EB;
+        border-top: 4px solid var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Discover Fashion</h1>
+        <p class="page-subtitle">
+            Explore thousands of pre-loved items from our sustainable fashion community. Find your next favorite piece while making a positive impact.
+        </p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Advanced Filter Section -->
+    <div class="filter-section">
+        <div class="filter-header">
+            <div class="filter-icon">🔍</div>
+            <h2 class="filter-title">Smart Filters</h2>
+        </div>
+
+        <form method="get" id="filterForm">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Search Items</label>
+                    <input type="text" name="search" placeholder="What are you looking for?"
+                           class="filter-input" value="@Request["search"]" />
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select name="category" class="filter-select">
+                        <option value="">All Categories</option>
+                        @foreach (var cat in ViewBag.Categories)
+                        {
+                            <option value="@cat" @(Request["category"] == cat ? "selected" : "")>@cat</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Size</label>
+                    <select name="size" class="filter-select">
+                        <option value="">All Sizes</option>
+                        @foreach (var sz in ViewBag.Sizes)
+                        {
+                            <option value="@sz" @(Request["size"] == sz ? "selected" : "")>@sz</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Condition</label>
+                    <select name="condition" class="filter-select">
+                        <option value="">All Conditions</option>
+                        @foreach (var cond in ViewBag.Conditions)
+                        {
+                            <option value="@cond" @(Request["condition"] == cond ? "selected" : "")>@cond</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter btn-primary-filter">
+                    🔍 Apply Filters
+                </button>
+                <a href="@Url.Action("Index", "Items")" class="btn-filter btn-secondary-filter">
+                    🔄 Clear All
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Header -->
+    <div class="results-header">
+        <div class="results-count">
+            Found <span class="highlight">@Model.Count()</span> amazing items
+        </div>
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="grid">
+                📱 Grid
+            </button>
+            <button class="view-btn" data-view="list">
+                📋 List
+            </button>
+        </div>
+    </div>
+
+    <!-- Items Grid -->
+    @if (Model.Any())
+    {
+        <div class="items-grid" id="itemsContainer">
+            @foreach (var item in Model)
+            {
+                <div class="item-card" data-category="@item.Category" data-size="@item.Size">
+                    <div class="item-image-container">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath" alt="@item.Title" class="item-image" />
+                        }
+                        else
+                        {
+                            <div class="item-image" style="background: var(--gradient-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                                👕
+                            </div>
+                        }
+                        <div class="item-badge badge-new">New</div>
+                        <div class="item-wishlist" onclick="toggleWishlist(this)">
+                            ♡
+                        </div>
+                    </div>
+
+                    <div class="item-content">
+                        <h3 class="item-title">@item.Title</h3>
+
+                        <div class="item-meta">
+                            <div class="meta-item">
+                                <div class="meta-icon">📏</div>
+                                <span>@item.Size</span>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">⭐</div>
+                                <span>@item.Condition</span>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">📂</div>
+                                <span>@item.Category</span>
+                            </div>
+                        </div>
+
+                        <div class="item-actions">
+                            <a href="@Url.Action("Details", "Items", new { id = item.Id })" class="btn-item btn-view">
+                                👁️ View Details
+                            </a>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <a href="@Url.Action("RequestSwap", "Items", new { id = item.Id })" class="btn-item btn-swap">
+                                    🔄 Request Swap
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3 class="empty-title">No Items Found</h3>
+            <p class="empty-text">
+                We couldn't find any items matching your criteria. Try adjusting your filters or check back later for new arrivals.
+            </p>
+            <a href="@Url.Action("Index", "Items")" class="btn-filter btn-primary-filter">
+                🔄 Browse All Items
+            </a>
+        </div>
+    }
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter form enhancements
+    const filterForm = document.getElementById('filterForm');
+    const filterInputs = filterForm.querySelectorAll('input, select');
+
+    // Auto-submit on filter change (optional)
+    filterInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Add a small delay for better UX
+            setTimeout(() => {
+                filterForm.submit();
+            }, 500);
+        });
+    });
+
+    // View toggle functionality
+    const viewButtons = document.querySelectorAll('.view-btn');
+    const itemsContainer = document.getElementById('itemsContainer');
+
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            viewButtons.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            const view = this.dataset.view;
+            if (view === 'list') {
+                itemsContainer.style.gridTemplateColumns = '1fr';
+                itemsContainer.querySelectorAll('.item-card').forEach(card => {
+                    card.style.display = 'flex';
+                    card.style.height = '200px';
+                });
+            } else {
+                itemsContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
+                itemsContainer.querySelectorAll('.item-card').forEach(card => {
+                    card.style.display = 'block';
+                    card.style.height = 'auto';
+                });
+            }
+        });
+    });
+
+    // Enhanced card animations
+    const cards = document.querySelectorAll('.item-card');
+    cards.forEach((card, index) => {
+        // Stagger animation on load
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px)';
+
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+
+        // Add floating animation on hover
+        card.addEventListener('mouseenter', function() {
+            this.style.animation = 'cardFloat 2s ease-in-out infinite';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.animation = 'none';
+        });
+    });
+
+    // Search input enhancements
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            // Add search suggestions or live filtering here
+
+            // Visual feedback
+            if (value.length > 0) {
+                this.style.borderColor = 'var(--accent)';
+                this.style.boxShadow = '0 0 0 3px rgba(6, 214, 160, 0.1)';
+            } else {
+                this.style.borderColor = '#E5E7EB';
+                this.style.boxShadow = 'none';
+            }
+        });
+    }
+
+    // Wishlist functionality
+    window.toggleWishlist = function(element) {
+        if (element.textContent === '♡') {
+            element.textContent = '❤️';
+            element.style.background = 'var(--gradient-accent)';
+            element.style.color = 'white';
+
+            // Add to wishlist logic here
+            showToast('Added to wishlist!', 'success');
+        } else {
+            element.textContent = '♡';
+            element.style.background = 'rgba(255, 255, 255, 0.9)';
+            element.style.color = 'var(--text-secondary)';
+
+            // Remove from wishlist logic here
+            showToast('Removed from wishlist', 'info');
+        }
+    };
+
+    // Toast notification system
+    window.showToast = function(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            font-weight: 600;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.transform = 'translateX(0)';
+        }, 100);
+
+        setTimeout(() => {
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    };
+});
+
+// CSS Animation for floating cards
+const style = document.createElement('style');
+style.textContent = `
+    @@keyframes cardFloat {
+        0%, 100% { transform: translateY(-10px) rotateX(5deg) scale(1.02); }
+        50% { transform: translateY(-15px) rotateX(7deg) scale(1.03); }
+    }
+`;
+document.head.appendChild(style);
+</script>

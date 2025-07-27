@@ -1,0 +1,46 @@
+﻿@using ReWare.Models
+@model IEnumerable<Item>
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron text-center">
+    <h1>Welcome to ReWear</h1>
+    <p class="lead">Community Clothing Exchange - Swap, Share & Save the Planet!</p>
+    <p>
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-success btn-lg">Start Swapping</a>
+        <a href="@Url.Action("Index", "Items")" class="btn btn-primary btn-lg">Browse Items</a>
+        <a href="@Url.Action("Create", "Items")" class="btn btn-warning btn-lg">List an Item</a>
+    </p>
+</div>
+
+@if (Model.Any())
+{
+    <div id="featuredCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                var item = Model.ElementAt(i);
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@item.ImagePath" class="d-block w-100" style="height:400px; object-fit:cover;" alt="@item.Title" />
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50">
+                        <h5>@item.Title</h5>
+                        <p>@item.Description</p>
+                        <a href="@Url.Action("Details", "Items", new { id = item.Id })" class="btn btn-light">View Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <a class="carousel-control-prev" href="#featuredCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#featuredCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+}
+else
+{
+    <p>No featured items yet.</p>
+}
